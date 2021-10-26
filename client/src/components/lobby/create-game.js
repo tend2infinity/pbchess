@@ -21,24 +21,24 @@ class CreateGame extends React.Component {
       copied: false,
       gametime: 0,
       category: '',
-      color: 'white',
+      color: '',
     }
   }
   
   handleBlackClick = () =>{
     this.setState({color: 'black'})
-    if(this.state.color === 'black'){
-      document.getElementsByClassName("black-king")[0].style.backgroundColor="rgb(63, 70, 70)"
+    if(this.state.color === 'white'){
+      document.getElementsByClassName("white-king")[0].style.backgroundColor="rgb(88, 97, 105)"
     }
+    document.getElementsByClassName("black-king")[0].style.backgroundColor="rgb(63, 70, 70)"
     
   }
   handleWhiteClick = () =>{
     this.setState({color: 'white'})
-  
-    if(this.state.color === 'white'){
-      document.getElementsByClassName("white-king")[0].style.backgroundColor="rgb(63, 70, 70)"
+    if(this.state.color === 'black'){
+      document.getElementsByClassName("black-king")[0].style.backgroundColor="rgb(88, 97, 105)"
     }
-    
+    document.getElementsByClassName("white-king")[0].style.backgroundColor="rgb(63, 70, 70)"
   }
 
   copyToClipBoard() {
@@ -51,34 +51,39 @@ class CreateGame extends React.Component {
   onChangeSlider = (e) => {
     this.setState({
       gametime: e
-    })
-  }
-
-  handleCreate = () => {
-    const {gametime,category} = this.state
-    if(gametime !== 0)
-    {
-      if(gametime >=1 && gametime <=2){
+    },()=>{
+      console.log(this.state.gametime)
+      if(this.state.gametime >=1 && this.state.gametime <=2){
         this.setState({
-          category: "Bullet"
+          category:'Bullet'
         })
       }
-      else if(gametime >=3 && gametime <= 7){
+      else if(this.state.gametime >=3 && this.state.gametime <= 7){
         this.setState({
-          category: "Blitz"
+          category:'Blitz'
         })
       }
       else{
         this.setState({
-          category: "Rapid"
+          category:'Rapid'
         })
       }
-       this.props.createGame(gametime,category)
+    })
+  }
+
+  handleCreate = () => {
+    const {gametime,category,color} = this.state
+    if(gametime !== 0 && color !== '')
+    {
+      console.log(gametime,category,color)
+      this.props.createGame({gametime,category,color})
+    }
+    else if(gametime===0) {
+      alert("Gametime cannot be zero!")
     }
     else{
-      alert("Gametime cannot be zero")
+      alert("Choose any one color!")
     }
-    console.log("this worked");
   }
 
   handle = props => {
@@ -160,6 +165,7 @@ class CreateGame extends React.Component {
                   handle={this.handle}
                   />
                   <h6>Minutes per side: {this.state.gametime}</h6>
+                  
               </Card>
               <br />
               <div className="card-title h5" >Select Your Color </div>

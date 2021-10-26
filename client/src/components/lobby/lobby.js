@@ -30,9 +30,10 @@ class Lobby extends React.Component {
       player1: undefined,   // user who creates a game
       player2: undefined,    // user who joins the game
       timerDetails: {
-        category: 'Blitz',
-        totalTime: 1800000
-      }
+        category: '',
+        totalTime: 0
+      },
+      color:''
     }
   }
 
@@ -42,14 +43,22 @@ class Lobby extends React.Component {
   }
 
   // Create a game with a unique gameId (player1's userId)
-  createGame() {
+  createGame(props) {
+    console.log(props)
+    var timerDetails ={
+      category: props.category,
+      totalTime: props.gametime * 60000
+    }
+    this.setState({
+      timerDetails,
+      color: props.color
+    })
 
     const { socket, user } = this.state;
 
     this.setState({
       loading: true
     });
-
     socket.emit('create_game', {
       userId: user._id,
       username: user.username
@@ -63,8 +72,9 @@ class Lobby extends React.Component {
 
   // Join a game with a unique gameId (player1's userId)
   joinGame(gameId) {
+    console.log(gameId)
 
-    const { socket, user } = this.state;
+    const { socket, user, timerDetails, color } = this.state;
 
     this.setState({
       loading: true
@@ -73,7 +83,9 @@ class Lobby extends React.Component {
     socket.emit('join_game', {
       userId: user._id,
       username: user.username,
-      gameId: gameId
+      gameId: gameId,
+      timerDetails,
+      color
     });
   }
 
@@ -84,7 +96,8 @@ class Lobby extends React.Component {
       status: true,
       gameId: gameInfo.gameId,
       player1: gameInfo.createdBy,
-      player2: gameInfo.joinedBy
+      player2: gameInfo.joinedBy,
+
     });
   }
 
@@ -113,7 +126,6 @@ class Lobby extends React.Component {
   }
 
   render() {
-    console.log("socket is", this.state.socket)
     return (
       <div>
         { this.state.status
@@ -123,6 +135,7 @@ class Lobby extends React.Component {
                 self = { this.state.user }
                 opponent = { this.state.player1.username !== this.state.user.username ? this.state.player1 : this.state.player2 }
                 timerDetails={ this.state.timerDetails }
+                color={this.state.color}
               />
             : <div> 
                 <Card className = 'text-center lobby-card' bg = 'dark' text = 'light'>
@@ -160,7 +173,7 @@ class Lobby extends React.Component {
                         socketId = { this.state.socket.id } 
                         loading = { this.state.loading }
                         showJoin = { _ => this.showJoin() } 
-                        createGame = { _ => this.createGame() }
+                        createGame = { e => this.createGame(e) }
                       />
                     : ''
                   }
@@ -168,7 +181,7 @@ class Lobby extends React.Component {
                       ? <JoinGame // renders option for joining a game
                           socket = { this.state.socket }
                           showCreate = { _ => this.showCreate() }
-                          joinGame = { e => this.joinGame(e) }
+                          joinGame = { (e) => this.joinGame(e) }
                         />
                       : ''
                   }

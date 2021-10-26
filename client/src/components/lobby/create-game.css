@@ -25,9 +25,9 @@
 }
 .black-king:hover{
     cursor: pointer;
-    background-color: rgb(74, 82, 82);
+    background-color: rgb(74, 82, 82) ;
 }
 .white-king:hover{
     cursor: pointer;
-    background-color: rgb(74, 82, 82);
+    background-color: rgb(74, 82, 82) ;
 }

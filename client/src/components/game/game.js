@@ -19,8 +19,8 @@ class Game extends React.Component {
       lastMove: undefined,
       gameOver: false,
       orientation: this.props.socket.id === this.props.gameId
-        ? 'white'
-        : 'black',
+        ? this.props.color
+        : (this.props.color === 'white' ? 'black' : 'white'),
       turn: 'w',
       dests: {
         'a2': [ 'a3', 'a4' ],
@@ -88,6 +88,7 @@ class Game extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props)
     this.props.socket.on('move_piece', gameState => {
       const { fen, lastMove, gameOver, turn, dests } = gameState;
 
@@ -133,7 +134,7 @@ class Game extends React.Component {
       <div style = {{ background: '#2b313c', height: '100vh' }}>
         <Col span = { 6 } />
         <Col span = { 12 } style = {{ top: '4%', margin: 'auto', width: 'fit-content' }}>
-            {/* Category: {this.props.timerDetails.category} Total time of game: {this.props.timerDetails.totalTime} */}
+             Category: {this.props.timerDetails.category} Total time of game: {this.props.timerDetails.totalTime} 
             <Timer
               player = { this.props.opponent }
               turn = { this.state.turn !== this.state.orientation.charAt(0) }

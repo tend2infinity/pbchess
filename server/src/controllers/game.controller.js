@@ -21,9 +21,11 @@ const create = (io, socket, data, liveGames) => {
 
 // Called while joining a game
 const join = (io, socket, data, liveGames) => {
+  console.log(data)
 
   liveGames.hgetall(data.gameId, (err, res) => {
     const game = res ? JSON.parse(res['*']): undefined;
+    console.log(game)
     if (!game)
       socket.emit('cannot_join_game', 'Cannot join! Room ID is invalid');
 
